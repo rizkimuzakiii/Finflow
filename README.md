@@ -33,7 +33,7 @@ npm run build
 - `PATCH /api/requests/:id`: actions `approve`, `reject` (requires `reason`), and `assign` (requires `reviewer`).
 - Approve and reject are available for pending requests; already approved or rejected rows are ineligible. The API rejects a missing rejection reason. Assignments are allowed for every request.
 - Save View uses `localStorage`. Report downloads selected visible-page rows as CSV.
-- Development states: open `/?scenario=loading` for a delayed response, `/?scenario=empty` for an empty list, `/?scenario=network-error` for a connection failure, or `/?scenario=http-error` for an HTTP 500 response.
+- Development states: open `/?scenario=loading` for a delayed response, `/?scenario=empty` for an empty list, `/?scenario=network-error` for a simulated HTTP 503 response, or `/?scenario=http-error` for an HTTP 500 response.
 
 ## Assumptions and differences
 
@@ -45,3 +45,20 @@ npm run build
 ## Request data flow
 
 The queue fetches a typed, paginated API response and dashboard summary. Search/filter/page state drives the list query; the returned rows populate the table. A user selects eligible rows and confirms an approve/reject or reviewer assignment dialog. The UI PATCHes each selected ID, then reloads summary data and updates the rows from the mutation response. Failures keep the dialog open and show an error.
+
+## Manual API Testing
+
+Pengujian menggunakan Express mock API lokal.
+
+### Sudah diuji
+- Insomnia: GET daftar, detail, pencarian, filter, pagination, dan summary.
+- Insomnia: PATCH approve, reject, dan assign serta beberapa validasi error.
+- React UI: pengambilan data, pencarian, filter department, dan pagination.
+- React UI: approve dan reject, termasuk pembaruan status pada tabel.
+
+### Belum diverifikasi melalui UI
+- Assign reviewer.
+- Loading, empty, dan error states.
+
+Data mock tersimpan di memori dan kembali ke kondisi awal
+ketika server API direstart.
